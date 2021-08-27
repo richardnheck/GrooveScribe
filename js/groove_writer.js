@@ -728,7 +728,6 @@ function GrooveWriter() {
 		return false; // should never get here
 	}
 
-
 	function sticking_rotate_state(id) {
 		var new_state = false;
 		var sticking_state = get_sticking_state(id, "ABC");
@@ -749,6 +748,68 @@ function GrooveWriter() {
 		}
 
 		set_sticking_state(id, new_state, true);
+	}
+
+	function set_counting_state(id, new_state, make_sound) {
+
+		// turn both off
+		document.getElementById("counting_count" + id).style.color = constant_note_hidden_color_rgb;
+
+		switch (new_state) {
+			case "off":
+				// show them all greyed out.
+				document.getElementById("counting_count" + id).style.color = constant_sticking_right_off_color_rgb;
+				break;
+			case "count":
+				var count_state = root.myGrooveUtils.figure_out_sticking_count_for_index(id, class_notes_per_measure, class_time_division, class_note_value_per_measure);
+
+				document.getElementById("counting_count" + id).style.color = constant_sticking_count_on_color_rgb;
+				document.getElementById("counting_count" + id).innerHTML = "" + count_state;
+				break;
+
+			default:
+				console.log("Bad state in set_counting_state: " + new_state);
+				break;
+		}
+	}
+
+	function get_counting_state(id, returnType) {
+		if (returnType != "ABC" && returnType != "URL") {
+			console.log("bad returnType in get_kick_state()");
+			returnType = "ABC";
+		}
+
+		var count_ele = document.getElementById("counting_count" + id);
+
+		if (count_ele.style.color == constant_sticking_count_on_color_rgb) {
+			if (returnType == "ABC")
+				return constant_ABC_STICK_COUNT;
+			else if (returnType == "URL")
+				return "c";
+		} else {
+			// none selected.  Call it off
+			if (returnType == "ABC")
+				return constant_ABC_STICK_OFF; // off (rest)
+			else if (returnType == "URL")
+				return "-"; // off (rest)
+		}
+		return false; // should never get here
+	}
+
+	function counting_rotate_state(id) {
+		var new_state = false;
+		var counting_state = get_counting_state(id, "ABC");
+
+		// figure out the next state
+		// we could get fancy here and default down strokes to R and upstrokes to L
+		// for now we will rotate through (Off, R, L, BOTH) in order
+		if (counting_state == constant_ABC_STICK_OFF) {
+			new_state = "count";
+		} else {
+			new_state = "off";
+		}
+
+		set_counting_state(id, new_state, true);
 	}
 
 	// highlight the note, this is used to play along with the midi track
@@ -1337,6 +1398,9 @@ function GrooveWriter() {
 			case "stickings":
 				contextMenu = document.getElementById("stickingsLabelContextMenu");
 				break;
+			case "countings":
+				contextMenu = document.getElementById("countingsLabelContextMenu");
+				break;
 			case "hh":
 				contextMenu = document.getElementById("hhLabelContextMenu");
 				break;
@@ -1380,6 +1444,9 @@ function GrooveWriter() {
 		switch (instrument) {
 			case "stickings":
 				setFunction = set_sticking_state;
+				break;
+			case "countings":
+				setFunction = set_counting_state;
 				break;
 			case "hh":
 				setFunction = set_hh_state;
@@ -1433,6 +1500,15 @@ function GrooveWriter() {
 						break;
 					default:
 						console.log("Bad sticking case in noteLabelPopupClick");
+						break;
+				}
+			} else if (instrument == "countings") {
+				switch (action) {
+					case "all_count":
+						set_counting_state(i, "count", i == startIndex);
+						break;
+					default:
+						console.log("Bad counting case in noteLabelPopupClick");
 						break;
 				}
 			} else if (instrument == "hh" && action == "downbeats") {
@@ -1514,6 +1590,8 @@ function GrooveWriter() {
 			case "kick":
 				contextMenu = document.getElementById("kickContextMenu");
 				break;
+			case "counting":
+				break;
 			default:
 				console.log("Bad case in handleNotePopup");
 				break;
@@ -1565,6 +1643,9 @@ function GrooveWriter() {
 				case "sticking":
 					sticking_rotate_state(id);
 					break;
+				case "counting":
+					counting_rotate_state(id);
+					break;
 				default:
 					console.log("Bad case in noteLeftClick: " + type);
 					break;
@@ -1581,6 +1662,9 @@ function GrooveWriter() {
 		switch (type) {
 			case "sticking":
 				set_sticking_state(id, new_setting, true);
+				break;
+			case "counting":
+				set_counting_state(id, new_setting, true);
 				break;
 			case "hh":
 				set_hh_state(id, new_setting, true);
@@ -2360,7 +2444,7 @@ function GrooveWriter() {
 	//
 	// (note: Only one measure, not all the notes on the page if multiple measures are present)
 	// Return value is the number of notes.
-	function get32NoteArrayFromClickableUI(Sticking_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, startIndexForClickableUI) {
+	function get32NoteArrayFromClickableUI(Sticking_Array, Counting_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, startIndexForClickableUI) {
 
 		var scaler = root.myGrooveUtils.getNoteScaler(class_notes_per_measure, class_num_beats_per_measure, class_note_value_per_measure); // fill proportionally
 
@@ -2371,6 +2455,10 @@ function GrooveWriter() {
 			// only grab the stickings if they are visible
 			if (isStickingsVisible())
 				Sticking_Array[array_index] = get_sticking_state(i + startIndexForClickableUI, "ABC");
+
+			// only grab the countings if they are visible
+			if (isCountingsVisible())
+				Counting_Array[array_index] = get_counting_state(i + startIndexForClickableUI, "ABC");
 
 			HH_Array[array_index] = get_hh_state(i + startIndexForClickableUI, "ABC");
 
@@ -2391,7 +2479,7 @@ function GrooveWriter() {
 
 	// each of the instruments can be muted.   Check the UI and zero out the array if the instrument is marked as muted
 	// for a particular measure
-	function muteArrayFromClickableUI(Sticking_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, measureIndex) {
+	function muteArrayFromClickableUI(HH_Array, Snare_Array, Kick_Array, Toms_Array, measureIndex) {
 		if (isInstrumentMuted("hh", measureIndex + 1))
 			fill_array_with_value_false(HH_Array, HH_Array.length);
 		if (isInstrumentMuted("snare", measureIndex + 1))
@@ -2467,6 +2555,7 @@ function GrooveWriter() {
 
 	function createMidiUrlFromClickableUI(MIDI_type) {
 		var Sticking_Array = get_empty_note_array_in_32nds();
+		var Counting_Array = get_empty_note_array_in_32nds();
 		var HH_Array = get_empty_note_array_in_32nds();
 		var Snare_Array = get_empty_note_array_in_32nds();
 		var Kick_Array = get_empty_note_array_in_32nds();
@@ -2479,8 +2568,8 @@ function GrooveWriter() {
 		var metronomeFrequency = root.getMetronomeFrequency();
 
 		// just the first measure
-		var num_notes = get32NoteArrayFromClickableUI(Sticking_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, 0);
-		muteArrayFromClickableUI(Sticking_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, 0);
+		var num_notes = get32NoteArrayFromClickableUI(Sticking_Array, Counting_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, 0);
+		muteArrayFromClickableUI(HH_Array, Snare_Array, Kick_Array, Toms_Array, 0);
 
 		var midiFile = new Midi.File();
 		var midiTrack = new Midi.Track();
@@ -2549,6 +2638,7 @@ function GrooveWriter() {
 				for (i = 1; i < class_number_of_measures; i++) {
 					// reset arrays
 					Sticking_Array = get_empty_note_array_in_32nds();
+					Counting_Array = get_empty_note_array_in_32nds();
 					HH_Array = get_empty_note_array_in_32nds();
 					Snare_Array = get_empty_note_array_in_32nds();
 					Kick_Array = get_empty_note_array_in_32nds();
@@ -2556,8 +2646,8 @@ function GrooveWriter() {
 
 
 					// get another measure
-					get32NoteArrayFromClickableUI(Sticking_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, class_notes_per_measure * i);
-					muteArrayFromClickableUI(Sticking_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, i);
+					get32NoteArrayFromClickableUI(Sticking_Array, Counting_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, class_notes_per_measure * i);
+					muteArrayFromClickableUI(HH_Array, Snare_Array, Kick_Array, Toms_Array, i);
 
 					root.myGrooveUtils.MIDI_from_HH_Snare_Kick_Arrays(midiTrack, HH_Array, Snare_Array, Kick_Array, Toms_Array, MIDI_type, metronomeFrequency, num_notes, num_notes_for_swing, swing_percentage, class_num_beats_per_measure, class_note_value_per_measure);
 				}
@@ -2587,6 +2677,7 @@ function GrooveWriter() {
 		myGrooveData.numBeats = class_num_beats_per_measure;
 		myGrooveData.noteValue = class_note_value_per_measure;
 		myGrooveData.showStickings = isStickingsVisible();
+		myGrooveData.showCountings = isCountingsVisible();
 		myGrooveData.showToms = isTomsVisible();
 		myGrooveData.title = document.getElementById("tuneTitle").value;
 		myGrooveData.author = document.getElementById("tuneAuthor").value;
@@ -2600,6 +2691,7 @@ function GrooveWriter() {
 		for (var i = 0; i < class_number_of_measures; i++) {
 			var total_notes = class_notes_per_measure * class_number_of_measures;
 			myGrooveData.sticking_array = [];
+			myGrooveData.counting_array = [];
 			myGrooveData.hh_array = [];
 			myGrooveData.snare_array = [];
 			myGrooveData.kick_array = [];
@@ -2611,6 +2703,9 @@ function GrooveWriter() {
 				// only grab the stickings if they are visible
 				if (isStickingsVisible())
 					myGrooveData.sticking_array.push(get_sticking_state(i, "ABC"));
+
+				if (isCountingsVisible())
+					myGrooveData.counting_array.push(get_counting_state(i, "ABC"));
 
 				myGrooveData.hh_array.push(get_hh_state(i, "ABC"));
 				myGrooveData.snare_array.push(get_snare_state(i, "ABC"));
@@ -2810,6 +2905,7 @@ function GrooveWriter() {
 
 	function generate_ABC(renderWidth) {
 		var Sticking_Array = get_empty_note_array_in_32nds();
+		var Counting_Array = get_empty_note_array_in_32nds();
 		var HH_Array = get_empty_note_array_in_32nds();
 		var Snare_Array = get_empty_note_array_in_32nds();
 		var Kick_Array = get_empty_note_array_in_32nds();
@@ -2819,7 +2915,7 @@ function GrooveWriter() {
 				new_snare_array,
 				post_abc,
 				num_sections;
-		var num_notes = get32NoteArrayFromClickableUI(Sticking_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, 0);
+		var num_notes = get32NoteArrayFromClickableUI(Sticking_Array, Counting_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, 0);
 
 		// abc header boilerplate
 		var tuneTitle = document.getElementById("tuneTitle").value;
@@ -2854,7 +2950,7 @@ function GrooveWriter() {
 						post_abc = get_permutation_post_ABC(i);
 
 						fullABC += get_permutation_pre_ABC(i);
-						fullABC += root.myGrooveUtils.create_ABC_from_snare_HH_kick_arrays(Sticking_Array, HH_Array, Snare_Array, new_kick_array, Toms_Array, post_abc, num_notes, class_time_division, num_notes, true, class_num_beats_per_measure, class_note_value_per_measure);
+						fullABC += root.myGrooveUtils.create_ABC_from_snare_HH_kick_arrays(Sticking_Array, Counting_Array, HH_Array, Snare_Array, new_kick_array, Toms_Array, post_abc, num_notes, class_time_division, num_notes, true, class_num_beats_per_measure, class_note_value_per_measure);
 						root.myGrooveUtils.note_mapping_array = root.myGrooveUtils.note_mapping_array.concat(root.myGrooveUtils.create_note_mapping_array_for_highlighting(HH_Array, Snare_Array, new_kick_array, Toms_Array, num_notes));
 					}
 				}
@@ -2880,7 +2976,7 @@ function GrooveWriter() {
 						post_abc = get_permutation_post_ABC(i);
 
 						fullABC += get_permutation_pre_ABC(i);
-						fullABC += root.myGrooveUtils.create_ABC_from_snare_HH_kick_arrays(Sticking_Array, HH_Array, new_snare_array, Kick_Array, Toms_Array, post_abc, num_notes, class_time_division, num_notes, true, class_num_beats_per_measure, class_note_value_per_measure);
+						fullABC += root.myGrooveUtils.create_ABC_from_snare_HH_kick_arrays(Sticking_Array, Counting_Array, HH_Array, new_snare_array, Kick_Array, Toms_Array, post_abc, num_notes, class_time_division, num_notes, true, class_num_beats_per_measure, class_note_value_per_measure);
 						root.myGrooveUtils.note_mapping_array = root.myGrooveUtils.note_mapping_array.concat(root.myGrooveUtils.create_note_mapping_array_for_highlighting(HH_Array, new_snare_array, Kick_Array, Toms_Array, num_notes));
 					}
 				}
@@ -2906,11 +3002,12 @@ function GrooveWriter() {
 					if (i > 0) {
 						// reset arrays
 						Sticking_Array = get_empty_note_array_in_32nds();
+						Counting_Array = get_empty_note_array_in_32nds();
 						HH_Array = get_empty_note_array_in_32nds();
 						Snare_Array = get_empty_note_array_in_32nds();
 						Kick_Array = get_empty_note_array_in_32nds();
 
-						get32NoteArrayFromClickableUI(Sticking_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, class_notes_per_measure * i);
+						get32NoteArrayFromClickableUI(Sticking_Array, Counting_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, class_notes_per_measure * i);
 					}
 
 					if ((i + 1) == class_number_of_measures) {
@@ -2923,7 +3020,7 @@ function GrooveWriter() {
 						// continuation measure
 						addon_abc = "\\\n";
 					}
-					fullABC += root.myGrooveUtils.create_ABC_from_snare_HH_kick_arrays(Sticking_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, addon_abc, num_notes, class_time_division, num_notes, true, class_num_beats_per_measure, class_note_value_per_measure);
+					fullABC += root.myGrooveUtils.create_ABC_from_snare_HH_kick_arrays(Sticking_Array, Counting_Array, HH_Array, Snare_Array, Kick_Array, Toms_Array, addon_abc, num_notes, class_time_division, num_notes, true, class_num_beats_per_measure, class_note_value_per_measure);
 					root.myGrooveUtils.note_mapping_array = root.myGrooveUtils.note_mapping_array.concat(root.myGrooveUtils.create_note_mapping_array_for_highlighting(HH_Array, Snare_Array, Kick_Array, Toms_Array, num_notes));
 				}
 
@@ -3039,6 +3136,7 @@ function GrooveWriter() {
 	// measureNum is indexed starting at 1, not 0
 	root.closeMeasureButtonClick = function (measureNum) {
 		var uiStickings = "";
+		var uiCountings = "";
 		var uiHH = "";
 		var uiTom1 = "";
 		var uiTom2 = "";
@@ -3054,6 +3152,7 @@ function GrooveWriter() {
 			// skip the range we are deleting
 			if (i < (measureNum - 1) * class_notes_per_measure || i >= measureNum * class_notes_per_measure) {
 				uiStickings += get_sticking_state(i, "URL");
+				uiCountings += get_counting_state(i, "URL");
 				uiHH += get_hh_state(i, "URL");
 				uiTom1 += get_tom_state(i, 1, "URL");
 				uiTom2 += get_tom_state(i, 2, "URL");
@@ -3067,7 +3166,7 @@ function GrooveWriter() {
 
 		root.expandAuthoringViewWhenNecessary(class_notes_per_measure, class_number_of_measures);
 
-		changeDivisionWithNotes(class_time_division, uiStickings, uiHH, uiTom1, uiTom2, uiTom4, uiSnare, uiKick);
+		changeDivisionWithNotes(class_time_division, uiStickings, uiCountings, uiHH, uiTom1, uiTom2, uiTom4, uiSnare, uiKick);
 
 		updateSheetMusic();
 	};
@@ -3077,6 +3176,7 @@ function GrooveWriter() {
 	// copy the notes from the last measure to the new measure
 	root.addMeasureButtonClick = function (event) {
 		var uiStickings = "";
+		var uiCountings = "";
 		var uiHH = "";
 		var uiTom1 = "";
 		var uiTom2 = "";
@@ -3090,6 +3190,7 @@ function GrooveWriter() {
 		for (i = 0; i < topIndex; i++) {
 
 			uiStickings += get_sticking_state(i, "URL");
+			uiCountings += get_counting_state(i, "URL");
 			uiHH += get_hh_state(i, "URL");
 			uiTom1 += get_tom_state(i, 1, "URL");
 			uiTom2 += get_tom_state(i, 2, "URL");
@@ -3101,6 +3202,7 @@ function GrooveWriter() {
 		// run the the last measure twice to default in some notes
 		for (i = topIndex - class_notes_per_measure; i < topIndex; i++) {
 			uiStickings += get_sticking_state(i, "URL");
+			uiCountings += get_counting_state(i, "URL");
 			uiHH += get_hh_state(i, "URL");
 			uiTom1 += get_tom_state(i, 1, "URL");
 			uiTom2 += get_tom_state(i, 2, "URL");
@@ -3113,7 +3215,7 @@ function GrooveWriter() {
 
 		root.expandAuthoringViewWhenNecessary(class_notes_per_measure, class_number_of_measures);
 
-		changeDivisionWithNotes(class_time_division, uiStickings, uiHH, uiTom1, uiTom2, uiTom4, uiSnare, uiKick);
+		changeDivisionWithNotes(class_time_division, uiStickings, uiCountings, uiHH, uiTom1, uiTom2, uiTom4, uiSnare, uiKick);
 
 		// reference the button and scroll it into view
 		var add_measure_button = document.getElementById("addMeasureButton");
@@ -3179,6 +3281,7 @@ function GrooveWriter() {
 	root.clearAllNotes = function () {
 		for (var i = 0; i < class_number_of_measures * class_notes_per_measure; i++) {
 			set_sticking_state(i, 'off');
+			set_counting_state(i, 'off');
 			set_hh_state(i, 'off');
 			set_tom1_state(i, 'off');
 			set_tom2_state(i, 'off');
@@ -3231,6 +3334,31 @@ function GrooveWriter() {
 			addOrRemoveKeywordFromClassById("showHideStickingsButton", "ClickToHide", true);
 		else
 			addOrRemoveKeywordFromClassById("showHideStickingsButton", "ClickToHide", false);
+
+		if (!dontRefreshScreen)
+			updateSheetMusic();
+
+		return false; // don't follow the link
+	};
+
+	function isCountingsVisible() {
+		var myElements = document.querySelectorAll(".countings-container");
+		for (var i = 0; i < myElements.length; i++) {
+			if (myElements[i].style.display == "block")
+				return true;
+		}
+
+		return false;
+	}
+
+	root.showHideCountings = function (force, showElseHide, dontRefreshScreen) {
+
+		var OnElseOff = showHideCSS_ClassDisplay(".countings-container", force, showElseHide, "block");
+		showHideCSS_ClassDisplay(".countings-label", force, showElseHide, "block");
+		if (OnElseOff)
+			addOrRemoveKeywordFromClassById("showHideCountingsButton", "ClickToHide", true);
+		else
+			addOrRemoveKeywordFromClassById("showHideCountingsButton", "ClickToHide", false);
 
 		if (!dontRefreshScreen)
 			updateSheetMusic();
@@ -3521,6 +3649,8 @@ function GrooveWriter() {
 
 		if (drumType == "Stickings") {
 			setFunction = set_sticking_state;
+		} else if (drumType == "Countings") {
+			setFunction = set_counting_state;
 		} else if (drumType == "H") {
 			setFunction = set_hh_state;
 		} else if (drumType == "T1") {
@@ -3570,7 +3700,7 @@ function GrooveWriter() {
 				setFunction(displayIndex, "a", false);
 				break;
 			case "B":
-				if (drumType == "Stickings")
+				if (drumType == "Stickings" || drumType == "Countings")
 					setFunction(displayIndex, "both", false);
 				break;
 			case "b":
@@ -3580,7 +3710,7 @@ function GrooveWriter() {
 					setFunction(displayIndex, "buzz", false);
 				break;
 			case "c":
-				if (drumType == "Stickings")
+				if (drumType == "Stickings" || drumType == "Countings")
 					setFunction(displayIndex, "count", false);
 				else
 					setFunction(displayIndex, "crash", false);
@@ -3599,7 +3729,7 @@ function GrooveWriter() {
 				break;
 			case "l":
 			case "L":
-				if (drumType == "Stickings")
+				if (drumType == "Stickings" || drumType == "Countings")
 					setFunction(displayIndex, "left", false);
 				break;
 			case "m":
@@ -3627,7 +3757,7 @@ function GrooveWriter() {
 			case "R":
 				if (drumType == "H")
 					setFunction(displayIndex, "ride", false);
-				else if (drumType == "Stickings")
+				else if (drumType == "Stickings" || drumType == "Countings")
 					setFunction(displayIndex, "right", false);
 				break;
 			case "s":
@@ -3678,6 +3808,8 @@ function GrooveWriter() {
 
 		if (drumType == "Stickings") {
 			setFunction = set_sticking_state;
+		} else if (drumType == "Countings") {
+			setFunction = set_counting_state;
 		} else if (drumType == "H") {
 			setFunction = set_hh_state;
 		} else if (drumType == "T1") {
@@ -4062,10 +4194,12 @@ function GrooveWriter() {
 	function set_Default_notes(encodedURLData) {
 		var Division;
 		var Stickings;
+		var Countings;
 		var HH;
 		var Snare;
 		var Kick;
 		var stickings_set_from_URL = false;
+		var countings_set_from_URL = false
 
 		var myGrooveData = root.myGrooveUtils.getGrooveDataFromUrlString(encodedURLData);
 
@@ -4080,6 +4214,7 @@ function GrooveWriter() {
 		root.expandAuthoringViewWhenNecessary(class_notes_per_measure, class_number_of_measures);
 
 		setNotesFromABCArray("Stickings", myGrooveData.sticking_array, class_number_of_measures);
+		setNotesFromABCArray("Countings", myGrooveData.counting_array, class_number_of_measures);
 		setNotesFromABCArray("H", myGrooveData.hh_array, class_number_of_measures);
 		setNotesFromABCArray("T1", myGrooveData.toms_array[0], class_number_of_measures);
 		setNotesFromABCArray("T2", myGrooveData.toms_array[1], class_number_of_measures);
@@ -4092,6 +4227,9 @@ function GrooveWriter() {
 
 		if (myGrooveData.showStickings)
 			root.showHideStickings(true, true, true);
+
+		if (myGrooveData.showCountings)
+			root.showHideCountings(true, true, true);
 
 		document.getElementById("tuneTitle").value = myGrooveData.title;
 
@@ -4137,9 +4275,10 @@ function GrooveWriter() {
 	//
 	// OMG this needs to be refactored really bad.   There is a GrooveData struct from groove utils that
 	//      would make this whole thing much easier.  :(
-	function changeDivisionWithNotes(newDivision, Stickings, HH, Tom1, Tom2, Tom4, Snare, Kick) {
+	function changeDivisionWithNotes(newDivision, Stickings, Countings, HH, Tom1, Tom2, Tom4, Snare, Kick) {
 		var oldDivision = class_time_division;
 		var wasStickingsVisable = isStickingsVisible();
+		var wasCountingsVisable = isCountingsVisible();
 		var wasTomsVisable = isTomsVisible();
 
 		class_time_division = newDivision;
@@ -4160,12 +4299,16 @@ function GrooveWriter() {
 		if (wasStickingsVisable)
 			root.showHideStickings(true, true, true);
 
+		if (wasCountingsVisable)
+			root.showHideCountings(true, true, true);
+
 		if (wasTomsVisable)
 			root.showHideToms(true, true, true);
 
 		// now set the right notes on and off
-		if (Stickings && HH && Tom1 && Tom2 && Tom4 && Snare && Kick) {
+		if (Stickings && Countings && HH && Tom1 && Tom2 && Tom4 && Snare && Kick) {
 			setNotesFromURLData("Stickings", Stickings, class_number_of_measures);
+			setNotesFromURLData("Countings", Countings, class_number_of_measures);
 			setNotesFromURLData("H", HH, class_number_of_measures);
 			setNotesFromURLData("T1", Tom1, class_number_of_measures);
 			setNotesFromURLData("T2", Tom2, class_number_of_measures);
@@ -4213,6 +4356,7 @@ function GrooveWriter() {
 	var have_shown_mixed_division_message = false;
 	root.changeDivision = function (newDivision) {
 		var uiStickings = "|";
+		var uiCountings = "|";
 		var uiHH = "|";
 		var uiTom1 = "|";
 		var uiTom2 = "|";
@@ -4244,6 +4388,7 @@ function GrooveWriter() {
 			var topIndex = class_notes_per_measure * class_number_of_measures;
 			for (var i = 0; i < topIndex; i++) {
 				uiStickings += get_sticking_state(i, "URL");
+				uiCountings += get_counting_state(i, "URL");
 				uiHH += get_hh_state(i, "URL");
 				uiTom1 += get_tom_state(i, 1, "URL");
 				uiTom2 += get_tom_state(i, 2, "URL");
@@ -4260,6 +4405,7 @@ function GrooveWriter() {
 			// changing from or changing to a triplet division
 			// triplets don't scale well, so use defaults when we change
 			uiStickings = root.myGrooveUtils.GetDefaultStickingsGroove(new_notes_per_measure, class_num_beats_per_measure, class_note_value_per_measure, class_number_of_measures);
+			uiCountings = root.myGrooveUtils.GetDefaultStickingsGroove(new_notes_per_measure, class_num_beats_per_measure, class_note_value_per_measure, class_number_of_measures);
 			uiHH = root.myGrooveUtils.GetDefaultHHGroove(new_notes_per_measure, class_num_beats_per_measure, class_note_value_per_measure, class_number_of_measures);
 			uiTom1 = root.myGrooveUtils.GetDefaultTom1Groove(new_notes_per_measure, class_num_beats_per_measure, class_note_value_per_measure, class_number_of_measures);
 			uiTom2 = root.myGrooveUtils.GetDefaultTom2Groove(new_notes_per_measure, class_num_beats_per_measure, class_note_value_per_measure, class_number_of_measures);
@@ -4273,7 +4419,7 @@ function GrooveWriter() {
 
 		root.expandAuthoringViewWhenNecessary(newDivision, class_number_of_measures);
 
-		changeDivisionWithNotes(newDivision, uiStickings, uiHH, uiTom1, uiTom2, uiTom4, uiSnare, uiKick);
+		changeDivisionWithNotes(newDivision, uiStickings, uiCountings, uiHH, uiTom1, uiTom2, uiTom4, uiSnare, uiKick);
 
 		updateSheetMusic();
 	};
@@ -4284,7 +4430,9 @@ function GrooveWriter() {
 	// indexStartForNotes is the index for the note ids.
 	root.HTMLforStaffContainer = function (baseindex, indexStartForNotes) {
 		var newHTML = ('\
-						<div class="staff-container" id="staff-container' + baseindex + '">\
+						<div class="staff-container" id="staff-container' + baseindex + '">\n');
+		// Stickings row
+		newHTML += ('\
 							<div class="stickings-row-container">\
 								<div class="line-labels">\
 									<div class="stickings-label" onClick="myGrooveWriter.noteLabelClick(event, \'stickings\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'stickings\', ' + baseindex + ')">STICKINGS</div>\
@@ -4318,7 +4466,39 @@ function GrooveWriter() {
 									</div>\
 								</div>\
 							</div>\n');
+		// countings
+		newHTML += ('\
+							<div class="countings-row-container">\
+								<div class="line-labels">\
+									<div class="countings-label" onClick="myGrooveWriter.noteLabelClick(event, \'countings\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'countings\', ' + baseindex + ')">COUNTINGS</div>\
+								</div>\
+								<div class="music-line-container">\n\
+									\
+									<div class="notes-container">\n');
 
+		newHTML += ('\
+										<div class="countings-container">\
+											<div class="opening_note_space"> </div>');
+		for (var i = indexStartForNotes; i < class_notes_per_measure + indexStartForNotes; i++) {
+
+			newHTML += ('\
+														<div id="counting' + i + '" class="counting">\n\
+															<div class="counting_count note_part"   id="counting_count' + i + '"   onClick="myGrooveWriter.noteLeftClick(event, \'counting\', ' + i + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteRightClick(event, \'counting\', ' + i + ')">C</div>\n\
+														</div>\n\
+													');
+
+			// add space between notes, exept on the last note
+			if ((i - (indexStartForNotes - 1)) % root.myGrooveUtils.noteGroupingSize(class_notes_per_measure, class_num_beats_per_measure, class_note_value_per_measure) === 0 && i < class_notes_per_measure + indexStartForNotes - 1) {
+				newHTML += ('<div class="space_between_note_groups"> </div>\n');
+			}
+		}
+		newHTML += ('<div class="end_note_space"></div>\n</div>\n');
+
+		newHTML += ('\
+									</div>\
+								</div>\
+							</div>\n');
+		// notes
 		newHTML += ('\
 							<span class="notes-row-container">\
 								<div class="line-labels">\

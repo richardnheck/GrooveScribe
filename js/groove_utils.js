@@ -156,6 +156,7 @@ function GrooveUtils() {
 		this.numBeats = 4;  // TimeSigTop: Top part of Time Signture 3/4, 4/4, 5/4, 6/8, etc...
 		this.noteValue = 4; // TimeSigBottom: Bottom part of Time Sig   4 = quarter notes, 8 = 8th notes, 16ths, etc..
 		this.sticking_array = class_empty_note_array.slice(0); // copy by value
+		this.counting_array = class_empty_note_array.slice(0); // copy by value
 		this.hh_array = class_empty_note_array.slice(0);    // copy by value
 		this.snare_array = class_empty_note_array.slice(0); // copy by value
 		this.kick_array = class_empty_note_array.slice(0);  // copy by value
@@ -163,6 +164,7 @@ function GrooveUtils() {
 		this.toms_array = [class_empty_note_array.slice(0), class_empty_note_array.slice(0), class_empty_note_array.slice(0), class_empty_note_array.slice(0)];
 		this.showToms = false;
 		this.showStickings = false;
+		this.showCountings = false;
 		this.title = "";
 		this.author = "";
 		this.comments = "";
@@ -555,7 +557,7 @@ function GrooveUtils() {
 		switch (tablatureChar) {
 		case "b":
 		case "B":
-			if (drumType == "Stickings")
+			if (drumType == "Stickings" || drumType == "Countings")
 				return constant_ABC_STICK_BOTH;
 			else if (drumType == "H")
 				return constant_ABC_HH_Ride_Bell;
@@ -563,7 +565,7 @@ function GrooveUtils() {
 				return constant_ABC_SN_Buzz;
 			break;
 		case "c":
-			if (drumType == "Stickings")
+			if (drumType == "Stickings" || drumType == "Countings") 
 				return constant_ABC_STICK_COUNT;
 			else if (drumType == "H")
 				return constant_ABC_HH_Crash;
@@ -582,7 +584,7 @@ function GrooveUtils() {
 			break;
 		case "l":
 		case "L":
-			if (drumType == "Stickings")
+			if (drumType == "Stickings" || drumType == "Countings")
 				return constant_ABC_STICK_L;
 			break;
 		case "m":  // (more) cow bell
@@ -636,6 +638,9 @@ function GrooveUtils() {
 				return constant_ABC_HH_Ride;
 				//break;
 			case "Stickings":
+				return constant_ABC_STICK_R;
+				//break;
+			case "Countings":
 				return constant_ABC_STICK_R;
 				//break;
 			default:
@@ -702,7 +707,6 @@ function GrooveUtils() {
 	// same as above, but reversed
 	function abcNotationToTablaturePerNote(drumType, abcChar) {
 		var tabChar = "-";
-
 		switch (abcChar) {
 		case constant_ABC_STICK_R:
 			tabChar = "R";
@@ -880,6 +884,7 @@ function GrooveUtils() {
 			maxLength = noteArray.length;
 
 		for (var i = 0; i < maxLength; i++) {
+
 			var newTabChar = abcNotationToTablaturePerNote(drumType, noteArray[i]);
 
 			if (drumType == "H" && newTabChar == "X") {
@@ -936,10 +941,12 @@ function GrooveUtils() {
 
 	root.getGrooveDataFromUrlString = function (encodedURLData) {
 		var Stickings_string;
+		var Countings_string;
 		var HH_string;
 		var Snare_string;
 		var Kick_string;
 		var stickings_set_from_URL = false;
+		var countings_set_from_URL = false;
 		var myGrooveData = new root.grooveDataNew();
 		var i;
 
@@ -966,6 +973,14 @@ function GrooveUtils() {
 			myGrooveData.showStickings = false;
 		} else {
 			myGrooveData.showStickings = true;
+		}
+
+		Countings_string = root.getQueryVariableFromString("Countings", false, encodedURLData);
+		if (!Countings_string) {
+			Countings_string = root.GetDefaultStickingsGroove(myGrooveData.notesPerMeasure, myGrooveData.numBeats, myGrooveData.noteValue, myGrooveData.numberOfMeasures);
+			myGrooveData.showCountings = false;
+		} else {
+			myGrooveData.showCountings = true;
 		}
 
 		HH_string = root.getQueryVariableFromString("H", false, encodedURLData);
@@ -1004,6 +1019,7 @@ function GrooveUtils() {
 		}
 
 		myGrooveData.sticking_array = root.noteArraysFromURLData("Stickings", Stickings_string, myGrooveData.notesPerMeasure, myGrooveData.numberOfMeasures);
+		myGrooveData.counting_array = root.noteArraysFromURLData("Countings", Countings_string, myGrooveData.notesPerMeasure, myGrooveData.numberOfMeasures);
 		myGrooveData.hh_array = root.noteArraysFromURLData("H", HH_string, myGrooveData.notesPerMeasure, myGrooveData.numberOfMeasures);
 		myGrooveData.snare_array = root.noteArraysFromURLData("S", Snare_string, myGrooveData.notesPerMeasure, myGrooveData.numberOfMeasures);
 		myGrooveData.kick_array = root.noteArraysFromURLData("K", Kick_string, myGrooveData.notesPerMeasure, myGrooveData.numberOfMeasures);
@@ -1112,6 +1128,12 @@ function GrooveUtils() {
 		if (myGrooveData.showStickings) {
 			var Stickings = "&Stickings=|" + root.tabLineFromAbcNoteArray('stickings', myGrooveData.sticking_array, true, true, total_notes, myGrooveData.notesPerMeasure);
 			fullURL += Stickings;
+		}
+
+		// only add if we need them.  // they are long and ugly. :)
+		if (myGrooveData.showCountings) {
+			var Countings = "&Countings=|" + root.tabLineFromAbcNoteArray('countings', myGrooveData.counting_array, true, true, total_notes, myGrooveData.notesPerMeasure);
+			fullURL += Countings;
 		}
 
 		return fullURL;
@@ -1518,6 +1540,7 @@ function GrooveUtils() {
 	// This is because of the stickings above the bar are a separate voice and should not have the "3" above them
 	// This could be changed to using the normal number and moving all the stickings down to be comments on each note in one voice (But is a pretty big change)
 	function snare_HH_kick_ABC_for_triplets(sticking_array,
+																					counting_array,
 																					HH_array,
 																					snare_array,
 																					kick_array,
@@ -1534,6 +1557,7 @@ function GrooveUtils() {
 		var scaler = 1; // we are always in 48 notes here, and the ABC needs to think we are in 48 since the specified division is 1/32
 		var ABC_String = "";
 		var stickings_voice_string = "V:Stickings\n";
+		var countings_voice_string = "V:Countings\n";
 		var hh_snare_voice_string = "V:Hands stem=up\n%%voicemap drum\n";
 		var kick_voice_string = "V:Feet stem=down\n%%voicemap drum\n";
 		var all_drum_array_of_array;
@@ -1581,6 +1605,7 @@ function GrooveUtils() {
 					// there are no notes in the next beat.   Let's output a special string for a quarter note rest
 					skip_adding_more_notes = true;
 					stickings_voice_string += "x8";
+					countings_voice_string += "x8";
 					hh_snare_voice_string += "z8";  // quarter note rest
 					i += 11;  // skip past all the rests
 
@@ -1594,6 +1619,13 @@ function GrooveUtils() {
 						sticking_array[si] = false;
 					stickings_voice_string += getABCforRest([sticking_array], i, 8, scaler, true);
 					stickings_voice_string += getABCforNote([sticking_array], i, 8, scaler);
+
+					// code duplicated from below
+					// clear any invalid countings
+					for(var ci = i+1; ci < i+12; ci++)
+						counting_array[ci] = false;
+					countings_voice_string += getABCforRest([counting_array], i, 8, scaler, true);
+					countings_voice_string += getABCforNote([counting_array], i, 8, scaler);
 
 					if (kick_stems_up) {
 						hh_snare_voice_string += getABCforNote(all_drum_array_of_array, i, 8, scaler);
@@ -1618,6 +1650,11 @@ function GrooveUtils() {
 							sticking_array[si] = false;
 						stickings_voice_string += getABCforRest([sticking_array], eighth_index, 4, scaler, true);
 						stickings_voice_string += getABCforNote([sticking_array], eighth_index, 4, scaler);
+
+						for(var ci = eighth_index+1; ci < eighth_index+6; ci++)
+							counting_array[ci] = false;
+						countings_voice_string += getABCforRest([counting_array], eighth_index, 4, scaler, true);
+						countings_voice_string += getABCforNote([counting_array], eighth_index, 4, scaler);
 
 						if (kick_stems_up) {
 							hh_snare_voice_string += getABCforRest(all_drum_array_of_array, eighth_index, 4, scaler, false);
@@ -1647,6 +1684,11 @@ function GrooveUtils() {
 							sticking_array[si] = false;
 						stickings_voice_string += getABCforRest([sticking_array], eighth_index, 2, scaler, true);
 						stickings_voice_string += getABCforNote([sticking_array], eighth_index, 2, scaler);
+
+						for(var ci = eighth_index+1; ci < eighth_index+3; ci++)
+							counting_array[ci] = false;
+						countings_voice_string += getABCforRest([counting_array], eighth_index, 2, scaler, true);
+						countings_voice_string += getABCforNote([counting_array], eighth_index, 2, scaler);
 
 						if (kick_stems_up) {
 							hh_snare_voice_string += getABCforRest(all_drum_array_of_array, eighth_index, 2, scaler, false);
@@ -1713,6 +1755,7 @@ function GrooveUtils() {
 				if (i % grouping_size_for_rests === 0) {
 					// we will output a rest for each place there could be a note
 					stickings_voice_string += getABCforRest([sticking_array], i, grouping_size_for_rests, scaler, true);
+					countings_voice_string += getABCforRest([counting_array], i, grouping_size_for_rests, scaler, true);
 
 					if (kick_stems_up) {
 						hh_snare_voice_string += getABCforRest(all_drum_array_of_array, i, grouping_size_for_rests, scaler, false);
@@ -1724,6 +1767,7 @@ function GrooveUtils() {
 				}
 
 				stickings_voice_string += getABCforNote([sticking_array], i, end_of_group, scaler);
+				countings_voice_string += getABCforNote([counting_array], i, end_of_group, scaler);
 
 				if (kick_stems_up) {
 					hh_snare_voice_string += getABCforNote(all_drum_array_of_array, i, end_of_group, scaler);
@@ -1736,6 +1780,7 @@ function GrooveUtils() {
 
 			if ((i % abc_gen_note_grouping_size(true, timeSigTop, timeSigBottom)) == abc_gen_note_grouping_size(true, timeSigTop, timeSigBottom) - 1) {
 				stickings_voice_string += " ";
+				countings_voice_string += " ";
 				hh_snare_voice_string += " "; // Add a space to break the bar line every group notes
 				kick_voice_string += " ";
 			}
@@ -1743,23 +1788,25 @@ function GrooveUtils() {
 			// add a bar line every measure
 			if (((i + 1) % (12 * timeSigTop * (4/timeSigBottom))) === 0) {
 				stickings_voice_string += "|";
+				countings_voice_string += "|";
 				hh_snare_voice_string += "|";
 				kick_voice_string += "|";
 
 				// add a line break every numberOfMeasuresPerLine measures
 				if (i < num_notes-1 && ((i + 1) % ((12 * timeSigTop * (4/timeSigBottom)) * numberOfMeasuresPerLine)) === 0) {
 					stickings_voice_string += "\n";
+					countings_voice_string += "\n";
 					hh_snare_voice_string += "\n";
 					kick_voice_string += "\n";
 				}
 			}
 		}
 
-		if (kick_stems_up)
-			ABC_String += stickings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc;
-		else
-			ABC_String += stickings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + kick_voice_string + post_voice_abc;
-
+		if (kick_stems_up) {
+			ABC_String += stickings_voice_string + post_voice_abc + countings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc;
+		} else {
+			ABC_String += stickings_voice_string + post_voice_abc + countings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + kick_voice_string + post_voice_abc;
+		}
 		return ABC_String;
 	}
 
@@ -1769,6 +1816,7 @@ function GrooveUtils() {
 	// post_voice_abc is a string added to the end of each voice line that can end the line
 	//
 	function snare_HH_kick_ABC_for_quads(sticking_array,
+																			 counting_array,
 																			 HH_array,
 																			 snare_array,
 																			 kick_array,
@@ -1785,6 +1833,7 @@ function GrooveUtils() {
 		var scaler = 1; // we are always in 32ths notes here
 		var ABC_String = "";
 		var stickings_voice_string = "V:Stickings\n"; // for stickings.  they are all rests with text comments added
+		var countings_voice_string = "V:Countings\n"; // for countings.  they are all rests with text comments added
 		var hh_snare_voice_string = "V:Hands stem=up\n%%voicemap drum\n"; // for hh and snare
 		var kick_voice_string = "V:Feet stem=down\n%%voicemap drum\n"; // for kick drum
 		var all_drum_array_of_array;
@@ -1822,6 +1871,7 @@ function GrooveUtils() {
 			if (i % abc_gen_note_grouping_size(false, timeSigTop, timeSigBottom) === 0) {
 				// we will only output a rest at the beginning of a beat phrase
 				stickings_voice_string += getABCforRest([sticking_array], i, grouping_size_for_rests, scaler, true);
+				countings_voice_string += getABCforRest([counting_array], i, grouping_size_for_rests, scaler, true);
 
 				if (kick_stems_up) {
 					hh_snare_voice_string += getABCforRest(all_drum_array_of_array, i, grouping_size_for_rests, scaler, false);
@@ -1833,6 +1883,7 @@ function GrooveUtils() {
 			}
 
 			stickings_voice_string += getABCforNote([sticking_array], i, end_of_group, scaler);
+			countings_voice_string += getABCforNote([counting_array], i, end_of_group, scaler);
 
 			if (kick_stems_up) {
 				hh_snare_voice_string += getABCforNote(all_drum_array_of_array, i, end_of_group, scaler);
@@ -1845,6 +1896,7 @@ function GrooveUtils() {
 			if ((i % abc_gen_note_grouping_size(false, timeSigTop, timeSigBottom)) == abc_gen_note_grouping_size(false, timeSigTop, timeSigBottom) - 1) {
 
 				stickings_voice_string += " ";
+				countings_voice_string += " ";
 				hh_snare_voice_string += " "; // Add a space to break the bar line every group notes
 				kick_voice_string += " ";
 			}
@@ -1852,21 +1904,24 @@ function GrooveUtils() {
 			// add a bar line every measure.   32 notes in 4/4 time.   (32/timeSigBottom * timeSigTop)
 			if (((i + 1) % ((32/timeSigBottom) * timeSigTop)) === 0) {
 				stickings_voice_string += "|";
+				countings_voice_string += "|";
 				hh_snare_voice_string += "|";
 				kick_voice_string += "|";
 			}
 			// add a line break every numberOfMeasuresPerLine measures, except the last
 			if (i < num_notes-1 && ((i + 1) % ((32/timeSigBottom) * timeSigTop * numberOfMeasuresPerLine)) === 0) {
 				stickings_voice_string += "\n";
+				countings_voice_string += "\n";
 				hh_snare_voice_string += "\n";
 				kick_voice_string += "\n";
 			}
 		}
 
-		if (kick_stems_up)
-			ABC_String += stickings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc;
-		else
-			ABC_String += stickings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + kick_voice_string + post_voice_abc;
+		if (kick_stems_up) {
+			ABC_String += stickings_voice_string + post_voice_abc + countings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc;
+		} else {
+			ABC_String += stickings_voice_string + post_voice_abc + countings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + kick_voice_string + post_voice_abc;
+		}
 
 		return ABC_String;
 	}
@@ -1959,7 +2014,7 @@ function GrooveUtils() {
 	};
 
 	// converts the symbol for a sticking count to an actual count based on the time signature
-	root.convert_sticking_counts_to_actual_counts = function(sticking_array, time_division, timeSigTop, timeSigBottom) {
+	root.convert_sticking_counts_to_actual_counts = function(sticking_array, counting_array, time_division, timeSigTop, timeSigBottom) {
 
 		var cur_div_of_array = 32;
 		if(root.isTripletDivision(time_division))
@@ -1970,14 +2025,25 @@ function GrooveUtils() {
 		// Time division is 4, 8, 16, 32, 12, 24, or 48
 		var notes_per_measure_in_time_division = ((time_division / 4) * timeSigTop) * (4/timeSigBottom);
 
-		for(var i in sticking_array) {
-			if(sticking_array[i] == constant_ABC_STICK_COUNT) {
+		for(var si in sticking_array) {
+			if(sticking_array[si] == constant_ABC_STICK_COUNT) {
 				// convert the COUNT into an actual letter or number
 				// convert the index into what it would have been if the array was "notes_per_measure" sized
-				var adjusted_index = Math.floor(i / (actual_notes_per_measure_in_this_array/notes_per_measure_in_time_division));
+				var adjusted_index = Math.floor(si / (actual_notes_per_measure_in_this_array/notes_per_measure_in_time_division));
 				var new_count = root.figure_out_sticking_count_for_index(adjusted_index, notes_per_measure_in_time_division, time_division, timeSigBottom);
 				var new_count_string = '"' + new_count + '"x';
-				sticking_array[i] = new_count_string;
+				sticking_array[si] = new_count_string;
+			}
+		}
+
+		for(var ci in counting_array) {
+			if(counting_array[ci] == constant_ABC_STICK_COUNT) {
+				// convert the COUNT into an actual letter or number
+				// convert the index into what it would have been if the array was "notes_per_measure" sized
+				var adjusted_index = Math.floor(ci / (actual_notes_per_measure_in_this_array/notes_per_measure_in_time_division));
+				var new_count = root.figure_out_sticking_count_for_index(adjusted_index, notes_per_measure_in_time_division, time_division, timeSigBottom);
+				var new_count_string = '"' + new_count + '"x';
+				counting_array[ci] = new_count_string;
 			}
 		}
 	};
@@ -1986,6 +2052,7 @@ function GrooveUtils() {
 	// The Arrays passed in must be 32 or 48 notes long
 	// notes_per_measure denotes the number of notes that _should_ be in the measure even though the arrays are always scaled up and large (48 or 32)
 	root.create_ABC_from_snare_HH_kick_arrays = function (sticking_array,
+																												counting_array,
 																												HH_array,
 																												snare_array,
 																												kick_array,
@@ -2000,7 +2067,7 @@ function GrooveUtils() {
 
 		// convert sticking count symbol to the actual count
 		// do this right before ABC output so it can't every get encoded into something that gets saved.
-		root.convert_sticking_counts_to_actual_counts(sticking_array, time_division, timeSigTop, timeSigBottom);
+		root.convert_sticking_counts_to_actual_counts(sticking_array, counting_array, time_division, timeSigTop, timeSigBottom);
 
 		var numberOfMeasuresPerLine = 2;   // Default
 
@@ -2011,6 +2078,7 @@ function GrooveUtils() {
 
 		if(root.isTripletDivisionFromNotesPerMeasure(notes_per_measure, timeSigTop, timeSigBottom)) {
 			return snare_HH_kick_ABC_for_triplets(sticking_array,
+																						counting_array,
 																						HH_array,
 																						snare_array,
 																						kick_array,
@@ -2025,6 +2093,7 @@ function GrooveUtils() {
 																						numberOfMeasuresPerLine);
 		} else {
 			return snare_HH_kick_ABC_for_quads(sticking_array,
+																				 counting_array,
 																				 HH_array,
 																				 snare_array,
 																				 kick_array,
@@ -2046,6 +2115,7 @@ function GrooveUtils() {
 	root.createABCFromGrooveData = function (myGrooveData, renderWidth) {
 
 		var FullNoteStickingArray = root.scaleNoteArrayToFullSize(myGrooveData.sticking_array, myGrooveData.numberOfMeasures, myGrooveData.notesPerMeasure, myGrooveData.numBeats, myGrooveData.noteValue);
+		var FullNoteCountingArray = root.scaleNoteArrayToFullSize(myGrooveData.counting_array, myGrooveData.numberOfMeasures, myGrooveData.notesPerMeasure, myGrooveData.numBeats, myGrooveData.noteValue);
 		var FullNoteHHArray = root.scaleNoteArrayToFullSize(myGrooveData.hh_array, myGrooveData.numberOfMeasures, myGrooveData.notesPerMeasure, myGrooveData.numBeats, myGrooveData.noteValue);
 		var FullNoteSnareArray = root.scaleNoteArrayToFullSize(myGrooveData.snare_array, myGrooveData.numberOfMeasures, myGrooveData.notesPerMeasure, myGrooveData.numBeats, myGrooveData.noteValue);
 		var FullNoteKickArray = root.scaleNoteArrayToFullSize(myGrooveData.kick_array, myGrooveData.numberOfMeasures, myGrooveData.notesPerMeasure, myGrooveData.numBeats, myGrooveData.noteValue);
@@ -2069,6 +2139,7 @@ function GrooveUtils() {
 				renderWidth);
 
 		fullABC += root.create_ABC_from_snare_HH_kick_arrays(FullNoteStickingArray,
+			FullNoteCountingArray,
 			FullNoteHHArray,
 			FullNoteSnareArray,
 			FullNoteKickArray,
