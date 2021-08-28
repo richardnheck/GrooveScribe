@@ -630,7 +630,7 @@ body {
 	top: 0px;
 	left: 6px;
 	font-size: 24px;
-	color: transparent;
+  color: #cccccc;
 	cursor: pointer;
   }
 .hh_crash {
