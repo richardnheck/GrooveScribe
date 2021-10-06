@@ -1241,7 +1241,7 @@ function GrooveUtils() {
 		//if(kick_stems_up)
 		//fullABC += "%%staves (Stickings Hands)\n";
 		//else
-		fullABC += "%%staves (Stickings Hands Feet)\n";
+		fullABC += "%%staves (Stickings Hands Feet Countings)\n";
 
 		// print comments below the legend if there is one, otherwise in the header section
 		if (tuneComments !== "") {
@@ -1258,10 +1258,12 @@ function GrooveUtils() {
 			'V:Hands stem=up \n' +
 			'%%voicemap drum\n' +
 			'"^Hi-Hat"^g4 "^Open"!open!^g4 ' +
-			'"^Crash"^c\'4 "^Stacker"^d\'4 "^Ride"^A\'4 "^Ride Bell"^B\'4 x2 "^H Tom"e4 "^M Tom"d4 "^F Tom"A4 "^Snare"c4 "^Buzz"!///!c4 "^Cross"^c4 "^Ghost  "!(.!!).!c4 "^Flam"{/c}c4  x10 ||\n' +
+			'"^Crash"^c\'4 "^Stacker"^d\'4 "^Ride"^A\'4 "^Ride Bell"^B\'4 x2 "^Hi-tom"e4 "^Mid-tom"d4 "^Low-tom"A4 "^Snare"c4 "^Buzz"!///!c4 "^Cross"^c4 "^Ghost  "!(.!!).!c4 "^Flam"{/c}c4  x10 ||\n' +
 			'V:Feet stem=down \n' +
 			'%%voicemap drum\n' +
 			'x52 "^Kick"F4 "^HH foot"^d,4 x4 ||\n' +
+			'V:Countings\n' +
+			'x8 x8 x8 x8 x8 x8 x8 x8 ||\n' +
 			'T:\n';
 		}
 
@@ -1803,9 +1805,9 @@ function GrooveUtils() {
 		}
 
 		if (kick_stems_up) {
-			ABC_String += stickings_voice_string + post_voice_abc + countings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc;
+			ABC_String += stickings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + countings_voice_string + post_voice_abc;
 		} else {
-			ABC_String += stickings_voice_string + post_voice_abc + countings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + kick_voice_string + post_voice_abc;
+			ABC_String += stickings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + kick_voice_string + post_voice_abc + countings_voice_string + post_voice_abc;
 		}
 		return ABC_String;
 	}
@@ -1918,9 +1920,9 @@ function GrooveUtils() {
 		}
 
 		if (kick_stems_up) {
-			ABC_String += stickings_voice_string + post_voice_abc + countings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc;
+			ABC_String += stickings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + countings_voice_string + post_voice_abc;
 		} else {
-			ABC_String += stickings_voice_string + post_voice_abc + countings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + kick_voice_string + post_voice_abc;
+			ABC_String += stickings_voice_string + post_voice_abc + hh_snare_voice_string + post_voice_abc + kick_voice_string + post_voice_abc + countings_voice_string + post_voice_abc;
 		}
 
 		return ABC_String;
@@ -2055,7 +2057,7 @@ function GrooveUtils() {
 																												counting_array,
 																												HH_array,
 																												snare_array,
-																												kick_array,
+					 																							kick_array,
 																												toms_array,
 																												post_voice_abc,
 																												num_notes,

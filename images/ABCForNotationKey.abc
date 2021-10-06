@@ -28,7 +28,7 @@ L:1/32
 %%map drum ^A' heads=Xhead print=A'  % Ride
 %%map drum ^c heads=Xhead print=c  % Cross Stick
 %%map drum ^d, heads=Xhead print=d,  % Foot Splash
-%%staves (Stickings Hands Feet)
+%%staves (Stickings Countings Hands Feet)
 K:C clef=perc
 V:Stickings
 x88 ||
@@ -37,4 +37,6 @@ V:Hands stem=up
 x8 "^Snare"c8 "^Cross"^c8 "^Tom 1"e8 "^Tom 2"d8 "^Floor Tom"A8 "^Hi-Hat"^g8 "^Open HH"!open!^g8 "^Ride"^A'8 x8 "^Crash"^c'8  ||
 V:Feet stem=down 
 %%voicemap drum
- "^Kick"F8 x64 "^HH foot"^d,4 ||
+"^Kick"F8 x64 "^HH foot"^d,4 ||
+V:Countings
+x88 ||

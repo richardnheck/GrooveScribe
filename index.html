@@ -4,20 +4,23 @@
   <!--Copyright 2015-2020 Lou Montulli, Mike Johnston  GPL V2.0 Please See LICENSE.txt for more details -->
 
   <head>
-    <title>Groove Scribe</title>
+    <title>Beat Writer</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <link rel="icon" sizes="192x192" href="images/gscribe-icon-192.png" />
-    <link rel="icon" sizes="96x96" href="images/gscribe-icon-96.png" />
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="icon" sizes="192x192" href="images/Beat-Writer-7-192.png" />
+    <link rel="icon" sizes="96x96" href="images/Beat-Writer-7-96.png" />
+    <link
+      rel="apple-touch-icon"
+      href="images/Beat-Writer-apple-touch-icon.png"
+    />
 
     <!--meta property="og:image" content="https://mikeslessons.com/groove/images/GScribe_Logo_on_orange.png"> -->
     <meta
       property="og:description"
-      content="Groove Scribe allows drummers to easily create grooves, listen, share, print sheet music, and more. Use the Groove Scribe to create new grooves, figure out the groove to your favorite song, or write down the groove to your latest tune."
+      content="Beat Writer allows drummers to easily create grooves, listen, share, print sheet music, and more. Use the Beat Writer to create new grooves, figure out the groove to your favorite song, or write down the groove to your latest tune."
     />
-    <meta property="og:site_name" content="GrooveScribe" />
+    <meta property="og:site_name" content="BeatWriter" />
 
     <script>
       document.write(
@@ -116,7 +119,7 @@
         <div id="LeftHandNav">
           <span id="divisionButtonContainer">
             <span id="logoInSubdivision" class="left-button-content"
-              ><img src="images/GScribe_Logo_lone_g.svg"
+              ><img src="images/Beat-Writer-7.svg"
             /></span>
             <span
               class="left-button edit-block"
@@ -222,7 +225,7 @@
         </div>
         <div id="TopNav" class="fullWidthEle">
           <span id="logoTextUpperLeft"
-            ><img src="images/GScribe_Logo_word_stack.svg"
+            ><img src="images/Beat-Writer-1.svg"
           /></span>
           <span id="upperLeft">
             <span id="metronomeContainer">
@@ -260,12 +263,6 @@
             </span>
           </span>
           <span id="upperRight">
-            <span
-              class="rightButtons grooveDB_hidden"
-              id="permutationAnchor"
-              onclick="myGrooveWriter.permutationAnchorClick(event);"
-              ><i class="fa fa-bars"></i> Permutations</span
-            >
             <span
               class="rightButtons"
               id="groovesAnchor"
@@ -383,7 +380,8 @@
               id="showHideTomsButton"
               onclick="event.preventDefault(); myGrooveWriter.showHideToms(false, false);"
               ><span class="bottomButtonIcon"
-                ><i id="icon-tom1" class="fa fa-circle"></i
+                ><i id="icon-tom" class="fa fa-circle"></i
+                ><i id="icon-tom1" class="fa fa-circle-o"></i
                 ><i id="icon-tom2" class="fa fa-circle-o"></i
                 ><i id="icon-tom3" class="fa fa-circle-o"></i></span
               ><span class="bottomButtonLabel">TOMS</span></span
@@ -398,7 +396,7 @@
               class="grooveDB_hidden pageBottomButton edit-block"
               id="showHideCountingsButton"
               onclick="event.preventDefault(); myGrooveWriter.showHideCountings(false, false);"
-              ><span class="bottomButtonLabel">COUNTINGS</span></span
+              ><span class="bottomButtonLabel">COUNTS</span></span
             >
             <span
               class="grooveDB_hidden pageBottomButton"
@@ -429,10 +427,10 @@
           <div id="midiTextOutput"></div>
 
           <span id="hiddenDescription">
-            GrooveScribe allows drummers to easily create grooves, listen,
-            share, print sheet music, and more. Use the GrooveScribe to create
-            new grooves, figure out the groove to your favorite song, or write
-            down the groove to your latest tune.
+            BeatWriter allows drummers to easily create grooves, listen, share,
+            print sheet music, and more. Use the BeatWriter to create new
+            grooves, figure out the groove to your favorite song, or write down
+            the groove to your latest tune.
           </span>
 
           <!-- GrooveDB output area -->
@@ -497,14 +495,6 @@
             title="Just hear the metronome."
           >
             Solo
-          </li>
-          <li
-            class="metronomeOptionsContextMenuItem"
-            id="metronomeOptionsContextMenuSpeedUp"
-            onclick='myGrooveWriter.metronomeOptionsMenuPopupClick("SpeedUp");'
-            title="Increase the tempo automatically"
-          >
-            Auto speed up
           </li>
           <li
             class="metronomeOptionsContextMenuItem"
@@ -599,7 +589,7 @@
         </ul>
       </div>
       <div class="noteContextMenu">
-        <ul id="stickingContextMenu" class="list">
+        <ul id="countingContextMenu" class="list">
           <li onclick='myGrooveWriter.notePopupClick("sticking", "off");'>
             Off
           </li>
@@ -609,7 +599,7 @@
         </ul>
       </div>
       <div class="noteContextMenu">
-        <ul id="sticking2ContextMenu" class="list">
+        <ul id="stickingContextMenu" class="list">
           <li onclick='myGrooveWriter.notePopupClick("sticking", "off");'>
             Off
           </li>
@@ -707,7 +697,7 @@
         <ul id="kickContextMenu" class="list">
           <li onclick='myGrooveWriter.notePopupClick("kick", "off");'>Off</li>
           <li onclick='myGrooveWriter.notePopupClick("kick", "normal");'>
-            Kick Normal
+            Base Normal
           </li>
           <li onclick='myGrooveWriter.notePopupClick("kick", "splash");'>
             Hi-hat foot
@@ -715,7 +705,7 @@
           <li
             onclick='myGrooveWriter.notePopupClick("kick", "kick_and_splash");'
           >
-            Kick &amp; Hi-hat foot
+            Base &amp; Hi-hat foot
           </li>
         </ul>
       </div>
@@ -740,11 +730,6 @@
             onclick='myGrooveWriter.noteLabelPopupClick("stickings", "all_left");'
           >
             all <b>L</b>s
-          </li>
-          <li
-            onclick='myGrooveWriter.noteLabelPopupClick("stickings", "all_count");'
-          >
-            <b>C</b>ounts
           </li>
           <li
             onclick='myGrooveWriter.noteLabelPopupClick("stickings", "cancel");'
@@ -886,10 +871,10 @@
       <div class="noteContextMenu">
         <ul id="kickLabelContextMenu" class="list">
           <li onclick='myGrooveWriter.noteLabelPopupClick("kick", "all_off");'>
-            all Kicks <b>Off</b>
+            all Bases <b>Off</b>
           </li>
           <li onclick='myGrooveWriter.noteLabelPopupClick("kick", "all_on");'>
-            all Kicks <b>On</b>
+            all Bases <b>On</b>
           </li>
           <li
             onclick='myGrooveWriter.noteLabelPopupClick("kick", "hh_foot_nums_on");'
@@ -905,7 +890,7 @@
             id="mute_kick_menu_item"
             onclick='myGrooveWriter.noteLabelPopupClick("kick", "mute");'
           >
-            mute kick sound
+            mute base sound
           </li>
           <li onclick='myGrooveWriter.noteLabelPopupClick("kick", "cancel");'>
             cancel
@@ -918,7 +903,7 @@
             <b>None</b>
           </li>
           <li onclick='myGrooveWriter.permutationPopupClick("kick_16ths");'>
-            <b>Kick</b> Permutation
+            <b>Base</b> Permutation
           </li>
           <li onclick='myGrooveWriter.permutationPopupClick("snare_16ths");'>
             <b>Snare</b> Permutation

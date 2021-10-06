@@ -7,7 +7,7 @@ body {
   /* Use GrooveWriter instead of body for easy embedding */
   margin: 0px;
   height: 100vh;
-  background-color: #393939;
+  background-color: #1a2d42;
 }
 #GrooveWriter {
   /* tag surrounds entire app */
@@ -18,7 +18,7 @@ body {
 		 * Usually set the height to 100vh - (the height of the top nav)
 		 */
   position: relative;
-  background-color: #393939;
+  background-color: #1a2d42;
   //background-color: #DDD;
   width: 100%;
   min-width: 800px;
@@ -48,7 +48,7 @@ body {
   top: 0px;
   left: 0px;
   border-right: 2px solid #000;
-  background: #393939;
+  background: #1a2d42;
   z-index: 999;
 }
 #TopNav {
@@ -68,6 +68,7 @@ body {
 #logoTextUpperLeft {
   padding: 9px 10px 6px 5px;
   display: inline-block;
+  background: linear-gradient(to right, #fff 85%, #fa693d 100%);
 }
 #logoTextUpperLeft img {
   height: 30px;
@@ -177,7 +178,7 @@ body {
   transition: all 0.1s ease-in-out;
 }
 #logoInSubdivision {
-  background: #000;
+  background: #fff;
 }
 #logoInSubdivision img {
   height: 40px;
@@ -185,12 +186,12 @@ body {
 .subdivision.disabled,
 .subdivision.disabled:hover {
   color: #000;
-  background-color: #393939;
+  background-color: #1a2d42;
 }
 .subdivision.buttonSelected,
 .subdivision.buttonSelected:hover {
   /* is subdivision and is selected */
-  background: #2484c0;
+  background: #ebb044;
   color: #fff;
   cursor: auto;
   transform: scale(1.1);
@@ -304,7 +305,7 @@ body {
   display: none;
   height: 25px;
   background: #000;
-  color: #2484c0;
+  color: #ebb044;
   padding-top: 9px;
   padding-left: 1px;
   font-size: 12px;
@@ -315,7 +316,7 @@ body {
   display: none;
   height: 25px;
   background: #000;
-  color: #2484c0;
+  color: #ebb044;
   padding-top: 9px;
   padding-left: 1px;
   font-size: 12px;
@@ -351,7 +352,7 @@ body {
 .hh-label:hover,
 .snare-label:hover,
 .kick-label:hover {
-  color: #2484c0;
+  color: #ebb044;
 }
 .music-line-container {
   display: inline-block;
@@ -856,12 +857,12 @@ body {
   list-style: none;
   background: #eeeeee;
   color: #000;
-  border: 1px solid #393939;
+  border: 1px solid #1a2d42;
   list-style: none;
 }
 .noteContextMenu > ul.list li {
   padding: 10px;
-  border-bottom: solid 1px #393939;
+  border-bottom: solid 1px #1a2d42;
   text-decoration: none;
 }
 .noteContextMenu > ul.list li:hover,
@@ -881,7 +882,7 @@ ul.list a:hover {
   height: 300px;
   overflow: auto;
   background: #eeeeee;
-  border: 1px solid #393939;
+  border: 1px solid #1a2d42;
 }
 .grooveListUL {
   margin: 0;
@@ -899,7 +900,7 @@ ul.list a:hover {
 .grooveListLI {
   padding: 10px;
   padding-left: 15px;
-  border-bottom: solid 1px #393939;
+  border-bottom: solid 1px #1a2d42;
 }
 .grooveListLI:hover {
   background: #cccccc;
@@ -1108,14 +1109,14 @@ hr {
   font-family: FontAwesome;
   font-size: 2em;
   letter-spacing: -3px;
-  content: "\f001";
+  content: "\f017";
   line-height: 32px;
 }
 #showHideCountingsButton.ClickToHide:before {
   font-family: FontAwesome;
   font-size: 2em;
   letter-spacing: -3px;
-  content: "\f066";
+  content: "\f017";
   line-height: 32px;
 }
 #printButton {
@@ -1182,7 +1183,7 @@ input[type="checkbox"]:not(:checked) + label {
 }
 #bottomButtonRow {
   padding: 20px 0px;
-  background: #393939;
+  background: #1a2d42;
   text-align: center;
   color: #888888;
   display: -webkit-flex;

@@ -7,7 +7,7 @@ body {
   /* Use GrooveWriter instead of body for easy embedding */
   margin: 0px;
   height: 100vh;
-  background-color: #393939;
+  background-color: #1a2d42;
 }
 #GrooveWriter {
   /* tag surrounds entire app */
@@ -18,7 +18,7 @@ body {
 		 * Usually set the height to 100vh - (the height of the top nav)
 		 */
   position: relative;
-  background-color: #393939;
+  background-color: #1a2d42;
   //background-color: #DDD;
   width: 100%;
   min-width: 800px;
@@ -49,7 +49,7 @@ body {
   top: 0px;
   left: 0px;
   border-right: 2px solid #000;
-  background: #393939;
+  background: #1a2d42;
   z-index: 999;
 }
 #TopNav {
@@ -96,6 +96,7 @@ body {
 #logoTextUpperLeft {
   padding: 9px 10px 6px 5px;
   display: inline-block;
+  background: linear-gradient(to right, #fff 85%, #fa693d 100%);
 }
 #logoTextUpperLeft img {
   height: 30px;
@@ -167,7 +168,7 @@ body {
 }
 
 #logoInSubdivision {
-  background-color: #000;
+  background-color: #fff;
 }
 #logoInSubdivision img {
   height: 40px;
@@ -198,23 +199,23 @@ body {
   height: 48px; /* Override from above */
 }
 #timeSigLabel {
-  color: #62c04c;
+  color: #ebb044;
   font-size: 20px;
   margin-bottom: -5px;
 }
 #timeSubLabel {
-  color: #62c04c;
+  color: #ebb044;
   font-size: 12px;
 }
 .left-button.disabled,
 .left-button.disabled:hover {
   color: #000;
-  background-color: #393939;
+  background-color: #1a2d42;
 }
 .left-button.buttonSelected,
 .left-button.buttonSelected:hover {
   /* is subdivision and is selected */
-  background: #2484c0;
+  background: #ebb044;
   color: #fff;
   cursor: auto;
   transform: scale(1.1);
@@ -391,8 +392,8 @@ body {
   color: var(--highlight-color);
 }
 .countings-label:hover {
-	color: var(--highlight-color);
-  }
+  color: var(--highlight-color);
+}
 .hh-label:hover,
 .snare-label:hover,
 .kick-label:hover {
@@ -421,16 +422,16 @@ body {
   -ms-user-select: none;
 }
 .countings-container {
-	display: none;
-	height: 32px;
-	background: #f7f1cf;
-	border: 1px solid transparent;
-	margin-top: 0px;
-	white-space: nowrap;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-  }
+  display: none;
+  height: 32px;
+  background: #f7f1cf;
+  border: 1px solid transparent;
+  margin-top: 0px;
+  white-space: nowrap;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
 .background-highlight-container {
   position: absolute;
   height: 190px;
@@ -626,13 +627,13 @@ body {
   cursor: pointer;
 }
 .counting_count {
-	position: absolute;
-	top: 0px;
-	left: 6px;
-	font-size: 24px;
+  position: absolute;
+  top: 0px;
+  left: 6px;
+  font-size: 24px;
   color: #cccccc;
-	cursor: pointer;
-  }
+  cursor: pointer;
+}
 .hh_crash {
   position: absolute;
   top: 19px;
@@ -1015,12 +1016,12 @@ body {
   list-style: none;
   background: #eeeeee;
   color: #000;
-  border: 1px solid #393939;
+  border: 1px solid #1a2d42;
   list-style: none;
 }
 .noteContextMenu > ul.list li {
   padding: 10px;
-  border-bottom: solid 1px #393939;
+  border-bottom: solid 1px #1a2d42;
   text-decoration: none;
 }
 .noteContextMenu > ul.list li:hover,
@@ -1040,7 +1041,7 @@ ul.list a:hover {
   height: 300px;
   overflow: auto;
   background: #eeeeee;
-  border: 1px solid #393939;
+  border: 1px solid #1a2d42;
 }
 .grooveListUL {
   margin: 0;
@@ -1058,7 +1059,7 @@ ul.list a:hover {
 .grooveListLI {
   padding: 10px;
   padding-left: 15px;
-  border-bottom: solid 1px #393939;
+  border-bottom: solid 1px #1a2d42;
 }
 .grooveListLI:hover {
   background: #cccccc;
@@ -1279,14 +1280,14 @@ hr {
   font-family: FontAwesome;
   font-size: 2em;
   letter-spacing: -3px;
-  content: "\f001";
+  content: "\f017";
   line-height: 32px;
 }
 #showHideCountingsButton.ClickToHide:before {
   font-family: FontAwesome;
   font-size: 2em;
   letter-spacing: -3px;
-  content: "\f066";
+  content: "\f017";
   line-height: 32px;
 }
 #printButton {
@@ -1353,7 +1354,7 @@ input[type="checkbox"]:not(:checked) + label {
 }
 #bottomButtonRow {
   padding: 20px 0px;
-  background: #393939;
+  background: #1a2d42;
   text-align: center;
   color: #888888;
   display: -webkit-flex;
@@ -1380,17 +1381,25 @@ input[type="checkbox"]:not(:checked) + label {
   display: none;
 }
 /*  3 circles make up the tom icon.  Position them */
-#icon-tom1 {
+#icon-tom {
   font-size: 16px;
-  margin-top: 16px;
+  margin-top: 10px;
+  vertical-align: top;
+}
+#icon-tom1 {
+  font-size: 14px;
+  margin-left: -6px;
+  margin-top: -4px;
+  vertical-align: top;
 }
 #icon-tom2 {
-  font-size: 14px;
-  margin-left: -5px;
+  font-size: 16px;
+  margin-left: 3px;
   vertical-align: top;
 }
 #icon-tom3 {
   font-size: 20px;
+  margin-left: -2px;
   margin-top: 11px;
 }
 @media print {

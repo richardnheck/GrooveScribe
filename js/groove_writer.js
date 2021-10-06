@@ -55,7 +55,7 @@ function GrooveWriter() {
 	root.myGrooveUtils.grooveDBAuthoring = parseInt(root.myGrooveUtils.getQueryVariableFromURL("GDB_Author", "0"), 10);
 
 	// private vars in the scope of the class
-	var class_app_title = "Groove Scribe";
+	var class_app_title = "Beat Writer";
 	var class_permutation_type = "none";
 	var class_advancedEditIsOn = false;
 	var class_measure_for_note_label_click = 0;
@@ -1591,6 +1591,7 @@ function GrooveWriter() {
 				contextMenu = document.getElementById("kickContextMenu");
 				break;
 			case "counting":
+				contextMenu = document.getElementById("countingContextMenu");
 				break;
 			default:
 				console.log("Bad case in handleNotePopup");
@@ -1626,7 +1627,7 @@ function GrooveWriter() {
 					set_hh_state(id, is_hh_on(id) ? "off" : "normal", true);
 					break;
 				case "snare":
-					set_snare_state(id, is_snare_on(id) ? "off" : "accent", true);
+					set_snare_state(id, is_snare_on(id) ? "off" : "normal", true);
 					break;
 				case "tom1":
 					set_tom_state(id, 1, is_tom_on(id, 1) ? "off" : "normal", true);
@@ -4431,6 +4432,38 @@ function GrooveWriter() {
 	root.HTMLforStaffContainer = function (baseindex, indexStartForNotes) {
 		var newHTML = ('\
 						<div class="staff-container" id="staff-container' + baseindex + '">\n');
+		// countings
+		newHTML += ('\
+							<div class="countings-row-container">\
+								<div class="line-labels">\
+									<div class="countings-label" onClick="myGrooveWriter.noteLabelClick(event, \'countings\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'countings\', ' + baseindex + ')">COUNTINGS</div>\
+								</div>\
+								<div class="music-line-container">\n\
+									\
+									<div class="notes-container">\n');
+
+		newHTML += ('\
+										<div class="countings-container">\
+											<div class="opening_note_space"> </div>');
+		for (var i = indexStartForNotes; i < class_notes_per_measure + indexStartForNotes; i++) {
+
+			newHTML += ('\
+														<div id="counting' + i + '" class="counting">\n\
+															<div class="counting_count note_part"   id="counting_count' + i + '"   onClick="myGrooveWriter.noteLeftClick(event, \'counting\', ' + i + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteRightClick(event, \'counting\', ' + i + ')">C</div>\n\
+														</div>\n\
+													');
+
+			// add space between notes, exept on the last note
+			if ((i - (indexStartForNotes - 1)) % root.myGrooveUtils.noteGroupingSize(class_notes_per_measure, class_num_beats_per_measure, class_note_value_per_measure) === 0 && i < class_notes_per_measure + indexStartForNotes - 1) {
+				newHTML += ('<div class="space_between_note_groups"> </div>\n');
+			}
+		}
+		newHTML += ('<div class="end_note_space"></div>\n</div>\n');
+
+		newHTML += ('\
+									</div>\
+								</div>\
+							</div>\n');
 		// Stickings row
 		newHTML += ('\
 							<div class="stickings-row-container">\
@@ -4466,48 +4499,16 @@ function GrooveWriter() {
 									</div>\
 								</div>\
 							</div>\n');
-		// countings
-		newHTML += ('\
-							<div class="countings-row-container">\
-								<div class="line-labels">\
-									<div class="countings-label" onClick="myGrooveWriter.noteLabelClick(event, \'countings\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'countings\', ' + baseindex + ')">COUNTINGS</div>\
-								</div>\
-								<div class="music-line-container">\n\
-									\
-									<div class="notes-container">\n');
-
-		newHTML += ('\
-										<div class="countings-container">\
-											<div class="opening_note_space"> </div>');
-		for (var i = indexStartForNotes; i < class_notes_per_measure + indexStartForNotes; i++) {
-
-			newHTML += ('\
-														<div id="counting' + i + '" class="counting">\n\
-															<div class="counting_count note_part"   id="counting_count' + i + '"   onClick="myGrooveWriter.noteLeftClick(event, \'counting\', ' + i + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteRightClick(event, \'counting\', ' + i + ')">C</div>\n\
-														</div>\n\
-													');
-
-			// add space between notes, exept on the last note
-			if ((i - (indexStartForNotes - 1)) % root.myGrooveUtils.noteGroupingSize(class_notes_per_measure, class_num_beats_per_measure, class_note_value_per_measure) === 0 && i < class_notes_per_measure + indexStartForNotes - 1) {
-				newHTML += ('<div class="space_between_note_groups"> </div>\n');
-			}
-		}
-		newHTML += ('<div class="end_note_space"></div>\n</div>\n');
-
-		newHTML += ('\
-									</div>\
-								</div>\
-							</div>\n');
 		// notes
 		newHTML += ('\
 							<span class="notes-row-container">\
 								<div class="line-labels">\
 									<div class="hh-label" onClick="myGrooveWriter.noteLabelClick(event, \'hh\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'hh\', ' + baseindex + ')">Hi-hat</div>\
-									<div class="tom-label" id="tom1-label" onClick="myGrooveWriter.noteLabelClick(event, \'tom1\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'tom1\', ' + baseindex + ')">H Tom</div>\
-									<div class="tom-label" id="tom2-label" onClick="myGrooveWriter.noteLabelClick(event, \'tom2\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'tom2\', ' + baseindex + ')">M Tom</div>\
+									<div class="tom-label" id="tom1-label" onClick="myGrooveWriter.noteLabelClick(event, \'tom1\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'tom1\', ' + baseindex + ')">Hi-tom</div>\
+									<div class="tom-label" id="tom2-label" onClick="myGrooveWriter.noteLabelClick(event, \'tom2\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'tom2\', ' + baseindex + ')">Mid-tom</div>\
 									<div class="snare-label" onClick="myGrooveWriter.noteLabelClick(event, \'snare\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'snare\', ' + baseindex + ')">Snare</div>\
-									<div class="tom-label" id="tom4-label" onClick="myGrooveWriter.noteLabelClick(event, \'tom4\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'tom4\', ' + baseindex + ')">F Tom</div>\
-									<div class="kick-label" onClick="myGrooveWriter.noteLabelClick(event, \'kick\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'kick\', ' + baseindex + ')">Kick</div>\
+									<div class="tom-label" id="tom4-label" onClick="myGrooveWriter.noteLabelClick(event, \'tom4\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'tom4\', ' + baseindex + ')">Low-tom</div>\
+									<div class="kick-label" onClick="myGrooveWriter.noteLabelClick(event, \'kick\', ' + baseindex + ')" oncontextmenu="event.preventDefault(); myGrooveWriter.noteLabelClick(event, \'kick\', ' + baseindex + ')">Base</div>\
 								</div>\
 								<div class="music-line-container">\
 									\

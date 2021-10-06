@@ -244,7 +244,7 @@ body {
   display: none;
   height: 25px;
   background: #f7f1cf;
-  color: #2484c0;
+  color: #ebb044;
   padding-top: 9px;
   padding-left: 1px;
   font-size: 12px;
@@ -255,7 +255,7 @@ body {
   display: none;
   height: 25px;
   background: #f7f1cf;
-  color: #2484c0;
+  color: #ebb044;
   padding-top: 9px;
   padding-left: 1px;
   font-size: 12px;
@@ -291,7 +291,7 @@ body {
 .hh-label:hover,
 .snare-label:hover,
 .kick-label:hover {
-  color: #2484c0;
+  color: #ebb044;
 }
 .music-line-container {
   display: inline-block;
@@ -602,7 +602,7 @@ body {
 #addMeasureButton {
   vertical-align: top;
   display: inline-block;
-  color: #2484c0;
+  color: #ebb044;
   cursor: pointer;
   font-size: 40px;
   padding-top: 2px;
@@ -614,7 +614,7 @@ body {
   display: inline-block;
   margin-top: 3px;
   cursor: pointer;
-  color: #2484c0;
+  color: #ebb044;
 }
 .closeMeasureButton:hover,
 #addMeasureButton:hover {
@@ -819,7 +819,7 @@ hr {
 }
 #metronomeAutoSpeedupTempoIncreaseAmountOutput,
 #metronomeAutoSpeedupTempoIncreaseIntervalOutput {
-  color: #2484c0;
+  color: #ebb044;
   font-weight: 700;
 }
 #metronomeAutoSpeedupConfigurationCloseButton {
@@ -847,13 +847,13 @@ hr {
   font-family: FontAwesome;
   font-size: 30px;
   letter-spacing: -3px;
-  content: "\f001";
+  content: "\f017";
 }
 #showHideCountingsButton.ClickToHide:before {
   font-family: FontAwesome;
   font-size: 30px;
   letter-spacing: -3px;
-  content: "\f066";
+  content: "\f017";
 }
 #printButton {
 }
