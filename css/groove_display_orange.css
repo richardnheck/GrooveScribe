@@ -42,7 +42,7 @@ body {
   display: inline-block;
   background-color: #222222;
   width: 100%; /* expand to the surounding element */
-  font-family: "Lato", sans-serif;
+  font-family: "Poppins", sans-serif;
   white-space: nowrap;
 }
 .playerControl.large {

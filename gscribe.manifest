@@ -57,8 +57,6 @@ soundfont/gunshot-ogg.js
 soundfont/gunshot-mp3.js
 
 # google hosted
-https://fonts.googleapis.com/css?family=Lato:400,700,300
+https://fonts.googleapis.com/css2?family=Poppins:400,700,300
 https://apis.google.com/js/client.js
 https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.en.ZCzlM_S-Zbs.O/m=client/rt=j/sv=1/d=1/ed=1/am=AQ/rs=AGLTcCNQZLcJ7JQOeAXXPLYyAx8XYIRFwQ/cb=gapi.loaded_0
-https://fonts.gstatic.com/s/lato/v11/1YwB1sO8YE1Lyjf12WNiUA.woff2
-https://fonts.gstatic.com/s/lato/v11/H2DMvhDLycM56KNuAtbJYA.woff2

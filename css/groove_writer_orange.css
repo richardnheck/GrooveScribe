@@ -24,7 +24,7 @@ body {
   min-width: 800px;
   /* to embed, add your header height here.  Replace 0px with your header height */
   //height: 100%;
-  font: 100% / normal "Lato", Calibri, sans-serif;
+  font: 100% / normal "Poppins", Calibri, sans-serif;
 }
 .fullWidthEle {
   max-width: 1478px; /* 1550 - 72 */
@@ -61,7 +61,7 @@ body {
   z-index: 998;
   width: calc(100% - 72px);
   margin-left: 72px;
-  height: 48px; /* total 48 */
+  height: 49px; /* total 48 */
   border-bottom: 1px solid #000;
   background: var(--header-bg-color);
   background: linear-gradient(
@@ -328,7 +328,7 @@ body {
   padding-left: 1px;
   font-size: 12px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 .countings-label {
   display: none;
@@ -339,7 +339,7 @@ body {
   padding-left: 1px;
   font-size: 12px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 .hh-label {
   display: block;
@@ -347,46 +347,41 @@ body {
   margin-top: 16px;
   margin-left: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 #tom1-label {
   display: block;
   white-space: nowrap;
-  margin-top: 5px;
   margin-left: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
   visibility: hidden;
 }
 #tom2-label {
   display: block;
   white-space: nowrap;
-  margin-top: 5px;
   margin-left: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
   visibility: hidden;
 }
 .snare-label {
-  margin-top: 5px;
   margin-left: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 #tom4-label {
   display: block;
   white-space: nowrap;
-  margin-top: 5px;
   margin-left: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
   visibility: hidden;
 }
 .kick-label {
-  margin-top: 5px;
   margin-left: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 .stickings-label:hover {
   color: var(--highlight-color);
@@ -447,7 +442,7 @@ body {
   -ms-user-select: none;
 }
 #tom1-container {
-  height: 28px;
+  height: 30px;
   white-space: nowrap;
   border: 1px solid transparent;
   -moz-user-select: none;
@@ -456,7 +451,7 @@ body {
   visibility: hidden;
 }
 #tom2-container {
-  height: 28px;
+  height: 30px;
   white-space: nowrap;
   border: 1px solid transparent;
   -moz-user-select: none;
@@ -466,14 +461,14 @@ body {
 }
 .snare-container {
   border: 1px solid transparent;
-  height: 28px;
+  height: 30px;
   white-space: nowrap;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
 }
 #tom4-container {
-  height: 28px;
+  height: 30px;
   white-space: nowrap;
   border: 1px solid transparent;
   -moz-user-select: none;
@@ -1192,7 +1187,7 @@ hr {
 }
 #fullURLPopupCopyButton {
   font-size: 16px;
-  font-family: Lato, sans-serif;
+  font-family: Poppins, sans-serif;
   font-weight: 700;
   color: #000;
   border: 0px;

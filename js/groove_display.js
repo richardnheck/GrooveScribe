@@ -108,7 +108,7 @@ if (typeof(GrooveDisplay) === "undefined") {
 		root.loadjscssfile("./groove_utils.js", "js");
 
 		// stylesheet
-		root.loadjscssfile("https://fonts.googleapis.com/css?family=Lato:400,700,300", "css");
+		root.loadjscssfile("https://fonts.googleapis.com/css?family=Poppins", "css");
 		root.loadjscssfile("../font-awesome/4.3.0/css/font-awesome.min.css", "css");
 		root.loadjscssfile("../css/groove_display.css", "css");
 

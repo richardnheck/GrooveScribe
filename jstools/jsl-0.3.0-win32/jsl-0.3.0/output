@@ -738,15 +738,15 @@ ig.networks.email.description})},e.prototype.inject_icons=function(){return this
 ........................................................................................................................................................^
 
 E:\Users\montulli\Documents\Groove Writer Working Directory\js\share.min.js(2): lint warning: missing semicolon
-mily=Lato:900&text="+this.config.ui.button_text)},e.prototype.inject_stylesheet=function(t){var e;return this.el.head.querySelector('link[href="'+t+'"]')?void 0:(e=document.createElement("link"),e.setAttribute("rel","stylesheet"),e.setAttribute("href",t),
+mily=Poppins:900&text="+this.config.ui.button_text)},e.prototype.inject_stylesheet=function(t){var e;return this.el.head.querySelector('link[href="'+t+'"]')?void 0:(e=document.createElement("link"),e.setAttribute("rel","stylesheet"),e.setAttribute("href",t),
 ................................................^
 
 E:\Users\montulli\Documents\Groove Writer Working Directory\js\share.min.js(2): lint warning: use of the void type may be unnecessary (void is always undefined)
-mily=Lato:900&text="+this.config.ui.button_text)},e.prototype.inject_stylesheet=function(t){var e;return this.el.head.querySelector('link[href="'+t+'"]')?void 0:(e=document.createElement("link"),e.setAttribute("rel","stylesheet"),e.setAttribute("href",t),
+mily=Poppins:900&text="+this.config.ui.button_text)},e.prototype.inject_stylesheet=function(t){var e;return this.el.head.querySelector('link[href="'+t+'"]')?void 0:(e=document.createElement("link"),e.setAttribute("rel","stylesheet"),e.setAttribute("href",t),
 ..........................................................................................................................................................^
 
 E:\Users\montulli\Documents\Groove Writer Working Directory\js\share.min.js(2): lint warning: multiple statements separated by commas (use semicolons?)
-mily=Lato:900&text="+this.config.ui.button_text)},e.prototype.inject_stylesheet=function(t){var e;return this.el.head.querySelector('link[href="'+t+'"]')?void 0:(e=document.createElement("link"),e.setAttribute("rel","stylesheet"),e.setAttribute("href",t),
+mily=Poppins:900&text="+this.config.ui.button_text)},e.prototype.inject_stylesheet=function(t){var e;return this.el.head.querySelector('link[href="'+t+'"]')?void 0:(e=document.createElement("link"),e.setAttribute("rel","stylesheet"),e.setAttribute("href",t),
 ..................................................................................................................................................................................................^
 
 E:\Users\montulli\Documents\Groove Writer Working Directory\js\share.min.js(2): lint warning: missing semicolon

@@ -481,8 +481,14 @@ function GrooveUtils() {
     var i;
 
     for (i = 0; i < notes_per_measure; i++) {
-      if (notes_per_measure == 48) oneMeasureString += "-";
-      else oneMeasureString += "x";
+      if (notes_per_measure == 48)
+        oneMeasureString += "-";
+      else {
+        if (i % 2 == 0 )
+          oneMeasureString += "x";
+        else
+          oneMeasureString += "-";
+      }
     }
     for (i = 0; i < numMeasures; i++) retString += oneMeasureString;
     retString += "|";

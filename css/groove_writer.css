@@ -8,7 +8,7 @@ body {
   margin: 0px;
   background: #ddd;
   /font-family: Calibri;
-  font-family: "Lato", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 .fullWidthEle {
   max-width: 1478px; /* 1550 - 72 */
@@ -39,7 +39,7 @@ body {
   z-index: 999;
   left: 72px;
   width: calc(100% - 72px);
-  height: 48px;
+  height: 49px;
   border-bottom: 1px solid #00c;
   background: #009ffa;
 }
@@ -249,7 +249,7 @@ body {
   padding-left: 1px;
   font-size: 12px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 .countings-label {
   display: none;
@@ -260,7 +260,7 @@ body {
   padding-left: 1px;
   font-size: 12px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 .hh-label {
   display: block;
@@ -268,19 +268,19 @@ body {
   margin-top: 20px;
   margin-left: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 .snare-label {
   margin-top: 35px;
   margin-left: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 .kick-label {
   margin-top: 35px;
   margin-left: 8px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 .stickings-label:hover {
   color: #000;
