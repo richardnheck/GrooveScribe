@@ -1259,14 +1259,12 @@ hr {
   font-family: FontAwesome;
   font-size: 2em;
   letter-spacing: -3px;
-  content: "\f065";
   line-height: 32px;
 }
 #showHideStickingsButton.ClickToHide:before {
   font-family: FontAwesome;
   font-size: 2em;
   letter-spacing: -3px;
-  content: "\f066";
   line-height: 32px;
 }
 #showHideCountingsButton {
@@ -1275,14 +1273,12 @@ hr {
   font-family: FontAwesome;
   font-size: 2em;
   letter-spacing: -3px;
-  content: "\f017";
   line-height: 32px;
 }
 #showHideCountingsButton.ClickToHide:before {
   font-family: FontAwesome;
   font-size: 2em;
   letter-spacing: -3px;
-  content: "\f017";
   line-height: 32px;
 }
 #printButton {
@@ -1374,6 +1370,16 @@ input[type="checkbox"]:not(:checked) + label {
 }
 .edit-block {
   display: none;
+}
+.svgIcon {
+  width: 50px;
+  height: 50px;
+}
+.svgIconFill {
+  fill: #aaaaaa;
+}
+.svgIconFill:hover {
+  fill: white;
 }
 /*  3 circles make up the tom icon.  Position them */
 #icon-tom {

@@ -937,7 +937,6 @@ input[type="checkbox"]:not(:checked) + label {
   display: block;
   margin-bottom: 2px;
 }
-
 .bottomButtonLabel {
   display: block;
 }
