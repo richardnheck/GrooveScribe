@@ -315,7 +315,7 @@ body {
 .line-labels {
   display: inline-block;
   vertical-align: top;
-  width: 80px;
+  width: 108px;
   font-size: 20px;
   display: table-cell;
 }
@@ -325,7 +325,7 @@ body {
   background: #f7f1cf;
   color: #000;
   padding-top: 9px;
-  padding-left: 1px;
+  padding-left: 8px;
   font-size: 12px;
   cursor: pointer;
   text-align: left;
@@ -336,7 +336,7 @@ body {
   background: #f7f1cf;
   color: #000;
   padding-top: 9px;
-  padding-left: 1px;
+  padding-left: 8px;
   font-size: 12px;
   cursor: pointer;
   text-align: left;
@@ -383,6 +383,11 @@ body {
   cursor: pointer;
   text-align: left;
 }
+.tom-label {
+  margin-left: 8px;
+  cursor: pointer;
+  text-align: left;
+}
 .stickings-label:hover {
   color: var(--highlight-color);
 }
@@ -391,7 +396,8 @@ body {
 }
 .hh-label:hover,
 .snare-label:hover,
-.kick-label:hover {
+.kick-label:hover,
+.tom-label:hover {
   color: var(--highlight-color);
 }
 .music-line-container {
@@ -1402,6 +1408,23 @@ input[type="checkbox"]:not(:checked) + label {
   font-size: 20px;
   margin-left: -2px;
   margin-top: 11px;
+}
+.brandingRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.brandingRow__link{
+  transform: scale(0.5);
+  transition: all 0.25s ease;
+}
+.brandingRow__link:hover {
+  cursor: pointer;
+  transform: scale(1);
+  transition: all 0.25s ease;
+}
+.brandingRow__link_image {
+  border-radius: 5px;
 }
 @media print {
   /* keep at bottom so it overrides the styles above */
