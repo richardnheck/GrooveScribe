@@ -854,8 +854,6 @@ function GrooveWriter() {
       new_state = "left";
     } else if (sticking_state == constant_ABC_STICK_L) {
       new_state = "both";
-    } else if (sticking_state == constant_ABC_STICK_BOTH) {
-      new_state = "count";
     } else {
       new_state = "off";
     }
