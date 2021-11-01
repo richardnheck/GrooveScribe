@@ -1369,6 +1369,7 @@ input[type="checkbox"]:not(:checked) + label {
 }
 .bottomButtonIcon {
   display: block;
+  height: 40px;
 }
 .bottomButtonLabel {
   margin-top: 2px;
@@ -1382,7 +1383,7 @@ input[type="checkbox"]:not(:checked) + label {
   height: 50px;
 }
 .svgIconFill {
-  fill: #aaaaaa;
+  fill: #888888;
 }
 .svgIconFill:hover {
   fill: white;
@@ -1414,8 +1415,8 @@ input[type="checkbox"]:not(:checked) + label {
   justify-content: center;
   align-items: center;
 }
-.brandingRow__link{
-  transform: scale(0.5);
+.brandingRow__link {
+  transform: scale(0.75);
   transition: all 0.25s ease;
 }
 .brandingRow__link:hover {
@@ -1425,6 +1426,8 @@ input[type="checkbox"]:not(:checked) + label {
 }
 .brandingRow__link_image {
   border-radius: 5px;
+  background-color: white;
+  width: 300px;
 }
 @media print {
   /* keep at bottom so it overrides the styles above */

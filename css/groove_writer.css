@@ -942,7 +942,7 @@ input[type="checkbox"]:not(:checked) + label {
 }
 .bottomButtonIcon {
   display: block;
-  margin-bottom: 2px;
+  height: 40px;
 }
 .bottomButtonLabel {
   display: block;
@@ -953,7 +953,7 @@ input[type="checkbox"]:not(:checked) + label {
   align-items: center;
 }
 .brandingRow__link {
-  transform: scale(0.5);
+  transform: scale(0.75);
   transition: all 0.25s ease;
 }
 .brandingRow__link:hover {
@@ -963,6 +963,8 @@ input[type="checkbox"]:not(:checked) + label {
 }
 .brandingRow__link_image {
   border-radius: 5px;
+  background-color: white;
+  width: 300px;
 }
 @media print {
   /* keep at bottom so it overrides the styles above */
