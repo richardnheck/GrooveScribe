@@ -179,6 +179,7 @@ body {
   cursor: pointer;
 }
 .left-button-content {
+  padding: 0 5px;
   display: block;
   cursor: pointer;
   font-size: 12px;
