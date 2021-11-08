@@ -196,9 +196,6 @@ body {
   -webkit-justify-content: center;
   transition: all 0.1s ease-in-out;
 }
-#timeLabel {
-  height: 48px; /* Override from above */
-}
 #timeSigLabel {
   color: #ebb044;
   font-size: 20px;
