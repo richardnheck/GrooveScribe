@@ -31,13 +31,62 @@
 
 // GrooveDisplay class.   The only one in this file.
 // singleton
+
+/**
+ * Play function called from outside the iFrame
+ */
+function externalPlay() {
+	const button = document.getElementById('midiPlayImage1');
+	button.click();
+};
+
+/**
+ * Metronome function called from outside the iFrame
+ */
+function externalMetronome() {
+	const button = document.getElementById('midiMetronomeMenu1');
+	button.click();
+};
+
+/**
+ * Tempo function called from outside the iFrame
+ */
+ function externalSetTempo(tempo) {
+	var myGrooveUtils = new GrooveUtils();
+	myGrooveUtils.grooveUtilsUniqueIndex = '1';
+	myGrooveUtils.setTempo(tempo);
+};
+
+/**
+ * Swing function called from outside the iFrame
+ */
+ function externalSetSwing(swing) {
+	var myGrooveUtils = new GrooveUtils();
+	myGrooveUtils.grooveUtilsUniqueIndex = '1';
+	myGrooveUtils.swingEnabled(true);
+	myGrooveUtils.setSwing(swing); 
+};
+
+/**
+ * Get the height of the contents so the iframe can be resized to fit
+ * @returns number
+ */
+function externalGetHeight() {
+	const grooveDisplayElementHeight = document.getElementById('GrooveDisplay2').offsetHeight;
+	const controlsHeight = 0; // (They are currently hidden) document.getElementById('playerControlsRow1').offsetHeight;
+	return grooveDisplayElementHeight + controlsHeight + 20;
+}
+
+function externalDisableScroll() {
+	document.documentElement.style.overflow = "hidden";
+}
+
 if (typeof(GrooveDisplay) === "undefined") {
 
 	var GrooveDisplay = {};
 
 	(function () {
 		"use strict";
-
 		var root = GrooveDisplay;
 
 		// list of files already added
@@ -139,6 +188,7 @@ if (typeof(GrooveDisplay) === "undefined") {
 		// shows the groove via SVG sheet music and a midi player
 		root.GrooveDBFormatPutGrooveInHTMLElement = function (HtmlTagId, GrooveDBTabIn) {
 			var myGrooveUtils = new GrooveUtils();
+			window.grooveUtils = myGrooveUtils;
 			var myGrooveData = new myGrooveUtils.grooveDataNew();
 
 			var combinedSnareTab = myGrooveUtils.mergeDrumTabLines(GrooveDBTabIn.snareAccentTab, GrooveDBTabIn.snareOtherTab);
@@ -233,7 +283,7 @@ if (typeof(GrooveDisplay) === "undefined") {
 				var svgReturn = myGrooveUtils.renderABCtoSVG(abcNotation);
 
 				if (linkToEditor)
-					svgTarget.innerHTML = '<a style="text-decoration: none" href="http://mikeslessons.com/gscribe/' + GrooveDefinition + '">' + svgReturn.svg + '</a>';
+					svgTarget.innerHTML = '<a style="text-decoration: none" href="https://parabolink.me/learning/grooves-and-fills/GrooveScribe/' + GrooveDefinition + '">' + svgReturn.svg + '</a>';
 				else
 					svgTarget.innerHTML = svgReturn.svg;
 			};

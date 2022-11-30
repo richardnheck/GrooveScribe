@@ -1376,6 +1376,9 @@ input[type="checkbox"]:not(:checked) + label {
 .edit-block {
   display: none;
 }
+.hide-block {
+  display: none !important;
+}
 .svgIcon {
   width: 50px;
   height: 50px;

@@ -118,9 +118,8 @@
       <div class="nonPrintable">
         <div id="LeftHandNav">
           <span id="divisionButtonContainer">
-            <span id="logoInSubdivision" class="left-button-content"
-              ><img src="images/Beat-Writer-7.svg"
-            /></span>
+            <span id="logoInSubdivision" class="left-button-content" style="height:38px !important;background-color: black;">
+              <img style="display:none" src="images/Beat-Writer-7.svg"/></span>
             <span
               class="left-button edit-block"
               id="timeLabel"
@@ -223,7 +222,7 @@
             >
           </span>
         </div>
-        <div id="TopNav" class="fullWidthEle">
+        <div id="TopNav" class="fullWidthEle" style="display:none">
           <span id="logoTextUpperLeft"
             ><img src="images/Beat-Writer-1.svg"
           /></span>
@@ -277,12 +276,12 @@
             >
           </span>
         </div>
-        <div id="midiPlayer" class="fullWidthEle">
+        <div id="midiPlayer" class="fullWidthEle" style="top:0px">
           <!-- space for the midiplayer to be attached by the javascript -->
         </div>
       </div>
 
-      <div id="RightHandContent">
+      <div id="RightHandContent" style="top:48px">
         <div class="nonPrintable">
           <div id="PermutationOptions">
             <script type="text/javascript">
@@ -307,7 +306,7 @@
 
           <div
             id="sheetMusicTextFields"
-            class="fullWidthEle grooveDB_hidden edit-block"
+            class="fullWidthEle grooveDB_hidden edit-block hide-block"
           >
             <span class="sheetMusicTextField"
               ><b>Title:</b>
@@ -344,6 +343,8 @@
                 ><i class="fa fa-key"></i></label
             ></span>
           </div>
+        
+          
 
           <div id="musicalInput" class="fullWidthEle edit-block">
             <div id="measureContainer">
@@ -575,7 +576,7 @@
             >
           </div>
 
-          <div class="brandingRow fullWidthEle">
+          <div class="brandingRow fullWidthEle" style="display:none">
             <div class="brandingRow__link">
               <a href="https://drummersbrainchild.com"><img class="brandingRow__link_image" src="images/Back-banner-1.svg"></img></a>
             </div>
